@@ -1,9 +1,26 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 import { createPost } from '../actions/index';
 import { Link } from 'react-router';
 
 class PostsNew extends Component {
+
+    // Creates new object on PostsNew class
+    static contextTypes = {
+        router: PropTypes.object
+    };
+
+    onSubmit(props) {
+        // props are the props from the form that come through the handleSubmit
+        // function
+        this.props.createPost(props)
+            .then(response => {
+                // Will navigate to a new page
+                this.context.router.push('/');
+            }, error => {
+                console.log(err);
+            });
+    }
 
     render() {
         // Redux form gives us some event handlers and things that automatically
@@ -11,7 +28,7 @@ class PostsNew extends Component {
         const { fields: { title, categories, content}, handleSubmit } = this.props;
 
         return (
-            <form onSubmit={handleSubmit(this.props.createPost)}>
+            <form onSubmit={ handleSubmit(this.onSubmit.bind(this)) }>
                 <h3>Create a New Post</h3>
                 <div className={`form-group ${title.touched && title.invalid ? 'has-danger' : ''}`}>
                     <label>Title</label>
@@ -38,7 +55,7 @@ class PostsNew extends Component {
                         className="btn btn-primary">
                     Submit
                 </button>
-                <Link to="/" className="btn btn-danger">Cancel</Link>
+                <Link to="/" className="btn btn-link">Cancel</Link>
             </form>
         );
     }
