@@ -12,10 +12,8 @@ const INITIAL_STATE = {
 export default function(state = INITIAL_STATE, action) {
     switch(action.type) {
         case FETCH_POSTS:
-            // NOTE: Same as object.assign?
             return {...state, all: action.payload.data};
         case FETCH_POST:
-            // NOTE: Same as object.assign?
             return {...state, post: action.payload};
         case CLEAR_POST:
             return {...state, post: null};

@@ -23,6 +23,8 @@ export function fetchPost(id) {
 
     // WITH THUNK - basically handles the "resolve" for a view that calls before render (componentWillMount)
     return (dispatch) => {
+        // Don't dispatch action until the promise resolves
+        // Redux thunk allows us to return a function (takes dispatch as only arg)
         request.then(({data}) => {
             dispatch({
                 type: FETCH_POST,
