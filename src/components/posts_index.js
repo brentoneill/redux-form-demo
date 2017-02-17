@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchPosts } from '../actions/index';
+import { fetchPosts, clearPost } from '../actions/index';
 import { Link } from 'react-router';
 
 class PostsIndex extends Component {
@@ -8,6 +8,7 @@ class PostsIndex extends Component {
     // Lifecycle method that fires right before rendered to DOM the FIRST time
     // Not called on subsequent re-renders
     componentWillMount() {
+        this.props.clearPost();
         this.props.fetchPosts();
     }
 
@@ -51,7 +52,8 @@ function mapStateToProps(state) {
 
 // 1st arg is mapStateToProps, 2nd is mapDispatchToProps
 export default connect(mapStateToProps, {
-    fetchPosts
+    fetchPosts,
+    clearPost
 })(PostsIndex);
 
 // NOTE: What is the difference between functional and class based components?
