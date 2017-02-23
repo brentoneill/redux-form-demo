@@ -2,6 +2,22 @@ import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 import { createPost } from '../actions/index';
 import { Link } from 'react-router';
+import _ from 'lodash';
+
+const FIELDS = {
+    title: {
+        type: 'input',
+        label: 'Title for New Post'
+    },
+    categories: {
+        type: 'input',
+        label: 'Enter some categories for the post'
+    },
+    content: {
+        type: 'textarea',
+        label: 'Post Contents'
+    }
+};
 
 class PostsNew extends Component {
 
@@ -22,6 +38,19 @@ class PostsNew extends Component {
             });
     }
 
+    renderField(fieldConfig, field) {
+        const fieldHelper = this.props.fields[field];
+        return (
+            <div key={fieldHelper.label} className={`form-group ${fieldHelper.touched && fieldHelper.invalid ? 'has-danger' : ''}`}>
+                <label>{fieldConfig.label}</label>
+                <fieldConfig.type className="form-control" {...fieldHelper} />
+                <div className="text-help">
+                    {fieldHelper.touched ? fieldHelper.error: ''}
+                </div>
+            </div>
+        );
+    }
+
     render() {
         // Redux form gives us some event handlers and things that automatically
         // get passed down to props from the reduxForm wrapping at bottom
@@ -30,27 +59,7 @@ class PostsNew extends Component {
         return (
             <form onSubmit={ handleSubmit(this.onSubmit.bind(this)) }>
                 <h3>Create a New Post</h3>
-                <div className={`form-group ${title.touched && title.invalid ? 'has-danger' : ''}`}>
-                    <label>Title</label>
-                    <input type="text" className="form-control" {...title} />
-                    <div className="text-help">
-                        {title.touched ? title.error: ''}
-                    </div>
-                </div>
-                <div className={`form-group ${categories.touched && categories.invalid ? 'has-danger' : ''}`}>
-                    <label>Categories</label>
-                    <input type="text" className="form-control" {...categories} />
-                    <div className="text-help">
-                        {categories.touched ? categories.error: ''}
-                    </div>
-                </div>
-                <div className={`form-group ${content.touched && content.invalid ? 'has-danger' : ''}`}>
-                    <label>Content</label>
-                    <textarea className="form-control" {...content} />
-                    <div className="text-help">
-                        {content.touched ? content.error: ''}
-                    </div>
-                </div>
+                {_.map(FIELDS, this.renderField.bind(this))}
                 <button type="submit"
                         className="btn btn-primary">
                     Submit
@@ -64,19 +73,11 @@ class PostsNew extends Component {
 function validate(values) {
     const errors = {};
 
-    if (!values.title) {
-        // NOTE: errors[key], key must match the field name
-        errors.title = 'Enter a title';
-    }
-
-    if (!values.categories) {
-        // NOTE: errors[key], key must match the field name
-        errors.categories = 'Enter some categories';
-    }
-
-    if(!values.content) {
-        errors.content = 'Enter some content';
-    }
+    _.each(FIELDS, (type, field) => {
+        if (!values[field]) {
+            errors[field] = `Enter a ${field}`;
+        }
+    });
 
     return errors;
 }
@@ -89,7 +90,7 @@ export default reduxForm({
     form: 'PostsNewForm',
     // Tell redux-form to watch these inputs
     // Used above to inject in to correspoinding inputs
-    fields: ['title', 'categories', 'content'],
+    fields: _.keys(FIELDS),
     validate
 }, null, { createPost })(PostsNew);
 
