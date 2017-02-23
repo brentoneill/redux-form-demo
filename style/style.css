@@ -1,3 +1,7 @@
+body {
+    margin: 40px;
+}
+
 .inline-block {
     display: inline-block;;
 }

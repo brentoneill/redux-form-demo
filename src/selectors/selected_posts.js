@@ -7,11 +7,10 @@ const selectedPostsSelector = state => state.posts.selectedPostIds;
 
 // Function to do calculation between the selectors
 const getPosts = (posts, selectedPostIds) => {
-    console.log('posts >', posts);
-    console.log('selectedPostIds >', selectedPostIds);
     const selectedPosts = posts.filter(post => {
         return selectedPostIds.includes(post.id);
     });
+    
     return selectedPosts;
 };
 
