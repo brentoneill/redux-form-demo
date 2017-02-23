@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchPosts, clearPost } from '../actions/index';
+import { fetchPosts, clearPost, addToSelected } from '../actions/index';
 import { Link } from 'react-router';
+
+import SelectedPostsList from './selected_posts_list';
 
 class PostsIndex extends Component {
 
@@ -12,11 +14,21 @@ class PostsIndex extends Component {
         this.props.fetchPosts();
     }
 
+    addToSelectedPosts(event) {
+        this.props.addToSelected(event.target.value);
+    }
+
     renderPosts() {
         return this.props.posts.map(post => {
             if (post.title) {
                 return (
                     <li className="list-group-item" key={post.id}>
+                        <div className="form-group pull-left">
+                            <input type="checkbox"
+                                    value={post.id}
+                                    onChange={this.addToSelectedPosts.bind(this)}>
+                            </input>
+                        </div>
                         <Link to={`posts/${post.id}`}>
                             <span className="pull-xs-right">{post.categories}</span>
                             <strong>{post.title}</strong>
@@ -35,10 +47,17 @@ class PostsIndex extends Component {
                         Add a post
                     </Link>
                 </div>
-                <h3>Posts</h3>
-                <ul className="list-group">
-                    {this.renderPosts()}
-                </ul>
+                <div className="selected-posts">
+                    <h3>Selected Posts</h3>
+                    <SelectedPostsList />
+                </div>
+                <hr />
+                <div className="all-posts">
+                    <h3>All Posts</h3>
+                    <ul className="list-group">
+                        {this.renderPosts()}
+                    </ul>
+                </div>
             </div>
         );
     }
@@ -53,7 +72,8 @@ function mapStateToProps(state) {
 // 1st arg is mapStateToProps, 2nd is mapDispatchToProps
 export default connect(mapStateToProps, {
     fetchPosts,
-    clearPost
+    clearPost,
+    addToSelected
 })(PostsIndex);
 
 // NOTE: What is the difference between functional and class based components?

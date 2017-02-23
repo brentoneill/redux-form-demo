@@ -5,6 +5,7 @@ export const FETCH_POST = 'FETCH_POST';
 export const CREATE_POST = 'CREATE_POST';
 export const DELETE_POST = 'DELETE_POST';
 export const CLEAR_POST = 'CLEAR_POST';
+export const ADD_TO_SELECTED = 'ADD_TO_SELECTED';
 
 const ROOT_URL = 'http://reduxblog.herokuapp.com/api';
 const API_KEY = '?key=bosecretsauce';
@@ -62,5 +63,13 @@ export function clearPost() {
     return {
         type: CLEAR_POST,
         payload: null
+    }
+}
+
+// Attempting to use reselect!
+export function addToSelected(postId) {
+    return {
+        type: ADD_TO_SELECTED,
+        payload: postId
     }
 }
